@@ -1,0 +1,5 @@
+._*
+*~
+.idea
+/recipes-connectivity/wpa-supplicant/files/*wlan0.conf
+/recipes-core/botcontroller/files/botcontroller/cmake-build-*/

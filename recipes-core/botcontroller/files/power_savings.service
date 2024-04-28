@@ -1,0 +1,11 @@
+[Unit]
+Description=Turn off USB chip, swap, etc...
+After=basic.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/sweeperbot/bin/powersavings.sh
+
+[Install]
+WantedBy=basic.target

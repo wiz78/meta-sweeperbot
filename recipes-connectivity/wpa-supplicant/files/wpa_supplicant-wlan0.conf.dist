@@ -1,0 +1,11 @@
+# EDIT THIS AND COPY AS wpa_supplicant-wlan0.conf
+
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+
+network={
+        key_mgmt=WPA-PSK
+	    ssid="YOUR SSID"
+	    psk=YOUR_PWD_GENERATED_WITH_wpa_passphrase
+}

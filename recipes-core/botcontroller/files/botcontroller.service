@@ -1,0 +1,11 @@
+[Unit]
+Description=Launch botcontroller
+
+[Service]
+User=bot
+ExecStart=/opt/sweeperbot/bin/botcontroller
+Restart=always
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target

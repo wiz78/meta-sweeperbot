@@ -1,0 +1,114 @@
+<html>
+<head>
+    <title>SweeperBot</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener( 'DOMContentLoaded', function()
+        {
+            $('#upload_form').submit(function(e)
+            {
+                const form = $('#upload_form')[0];
+                const data = new FormData(form);
+
+                e.preventDefault();
+
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    xhr: () => {
+                        const xhr = new window.XMLHttpRequest();
+
+                        xhr.upload.addEventListener('progress', evt => {
+                            if (evt.lengthComputable) {
+                                const per = evt.loaded / evt.total;
+
+                                $('#prg').html(`progress: ${Math.round(per * 100)}%`);
+                            }
+                        }, false);
+
+                        return xhr;
+                    },
+                    error: () => $('#prg').html('ERROR!')
+                });
+            });
+
+            $('form.json').each( (i, form) => {
+                $(form).submit( e => {
+
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: toJson( $( form )),
+                        contentType: 'application/json'
+                    });
+                } );
+            } );
+        } );
+
+        function toJson( form )
+        {
+            const o = {};
+            const a = form.serializeArray();
+
+            $.each( a, function()
+            {
+                if( o[ this.name ] ) {
+
+                    if( !o[ this.name ].push )
+                        o[ this.name ] = [ o[ this.name ] ];
+
+                    o[ this.name ].push( this.value || '' );
+
+                } else
+                    o[ this.name ] = this.value || '';
+            } );
+
+            return JSON.stringify( o );
+        }
+    </script>
+</head>
+<body>
+    <form method="POST" action="/update" enctype="multipart/form-data" id="upload_form">
+        <h1>OTA</h1>
+        <input type="file" name="update">
+        <input type="submit" value="Update">
+    </form>
+    <div id="prg">progress: 0%</div>
+
+    <h1>Autonomous mode</h1>
+
+    <form method="POST" action="/startExploring" target="result">
+        <button type="submit">Start</button>
+    </form>
+
+    <form method="POST" action="/stopExploring" target="result">
+        <button type="submit">Stop</button>
+    </form>
+
+    <form method="POST" action="/stop" target="result">
+        <h1>Stop</h1>
+        <button type="submit">Stop</button>
+    </form>
+
+    <form method="POST" action="/move" target="result" class="json">
+        <h1>Move</h1>
+        <label>Distance <input type="number" min="0" name="distance" required></label>
+        <label><input type="checkbox" value="1" name="backwards"> backwards</label>
+        <button type="submit">Move</button>
+    </form>
+
+    <form method="POST" action="/rotate" target="result" class="json">
+        <h1>Rotate</h1>
+        <label>Angle <input type="number" min="1" max="180" value="90" name="angle" required></label>
+        <label><input type="checkbox" value="1" name="ccw"> CCW</label>
+        <button type="submit">Rotate</button>
+    </form>
+
+    <iframe name="result"></iframe>
+</body>
+</html>
