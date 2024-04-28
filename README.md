@@ -1,6 +1,6 @@
 # meta-sweeperbot
 
-Yocto layer for the Sweeperbot project.
+Yocto layer for the Sweeperbot project (https://makerworld.com/en/models/446459).
 
 ## Dependencies
 
